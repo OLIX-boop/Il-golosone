@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Il Golosone – Panetteria e Pasticceria Artigianale a Cernusco sul Naviglio. Pane fresco, dolci artigianali e caffetteria. Prenota sull'app!">
+  <title>Il Golosone – Panetteria &amp; Pasticceria Artigianale · Cernusco sul Naviglio</title>
+
+  <!-- Tailwind config must come BEFORE the CDN script -->
+  <script>
+    tailwind = {
+      config: {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                primary:      '#5a2b2c',
+                'primary-dk': '#3d1a1b',
+                accent:       '#dcb96a',
+                'accent-lt':  '#f0d99a',
+                'accent-dk':  '#b8962f',
+                cream:        '#fdf8f0',
+                'cream-dk':   '#f0e4d2',
+                dark:         '#2d1a1b',
+              }
+            },
+            fontFamily: {
+              serif:  ['"Playfair Display"', 'Georgia', 'serif'],
+              script: ['"Dancing Script"', 'cursive'],
+              sans:   ['Inter', 'system-ui', 'sans-serif'],
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ── Base ── */
+    html { scroll-behavior: smooth; }
+    body { background-color: #fdf8f0; font-family: 'Inter', sans-serif; color: #2d1a1b; }
+
+    /* ── Navbar ── */
+    #navbar { transition: background 0.3s, box-shadow 0.3s; }
+    #navbar.scrolled {
+      background-color: rgba(253,248,240,0.97) !important;
+      box-shadow: 0 2px 24px rgba(90,43,44,0.10);
+    }
+
+    /* ── Hero overlay ── */
+    .hero-overlay {
+      background: linear-gradient(160deg,
+        rgba(30,10,10,0.78) 0%,
+        rgba(90,43,44,0.55) 60%,
+        rgba(30,10,10,0.65) 100%);
+    }
+
+    /* ── Specialty card image zoom ── */
+    .spec-card:hover .spec-img { transform: scale(1.09); }
+
+    /* ── Gallery hover ── */
+    .gal-cell:hover img { transform: scale(1.06); }
+
+    /* ── Gold separator ── */
+    .sep {
+      width: 56px; height: 3px; border-radius: 2px;
+      background: linear-gradient(90deg, #dcb96a, #b8962f);
+    }
+
+    /* ── Gold pulse on hero CTA ── */
+    @keyframes pulse-gld {
+      0%,100% { box-shadow: 0 0 0 0 rgba(220,185,106,.45); }
+      50%      { box-shadow: 0 0 0 14px rgba(220,185,106,0); }
+    }
+    .pulse-gld { animation: pulse-gld 2.8s infinite; }
+
+    /* ── Mobile menu slide ── */
+    #mob-menu {
+      max-height: 0; opacity: 0; overflow: hidden;
+      transition: max-height .38s ease, opacity .3s ease;
+    }
+    #mob-menu.open { max-height: 420px; opacity: 1; }
+
+    /* ── Hamburger → X ── */
+    .hb { display: block; width: 22px; height: 2px; border-radius: 2px;
+      background: #5a2b2c; transition: transform .3s, opacity .3s; }
+    .hb-wrap.open .hb:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hb-wrap.open .hb:nth-child(2) { opacity: 0; }
+    .hb-wrap.open .hb:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Scroll fade-in ── */
+    .fade-up {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+
+    /* ── Custom scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #fdf8f0; }
+    ::-webkit-scrollbar-thumb { background: #dcb96a; border-radius: 3px; }
+
+    /* ── Map ── */
+    .map-wrap { border-radius: 1.25rem; overflow: hidden;
+      box-shadow: 0 8px 36px rgba(90,43,44,0.14); }
+  </style>
+</head>
+
+<body>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     NAVBAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<nav id="navbar" class="fixed inset-x-0 top-0 z-50 py-3 px-5 md:px-10
+     bg-brand-cream/90 backdrop-blur-md">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#hero" class="group flex-shrink-0">
+      <img src="foto/logo.png" alt="Il Golosone"
+           class="h-[52px] w-auto transition-transform duration-300 group-hover:scale-105 drop-shadow-sm">
+    </a>
+
+    <!-- Desktop links -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#specialita"
+         class="text-brand-primary text-[13px] font-semibold uppercase tracking-widest
+                hover:text-brand-accent transition-colors duration-200">Prodotti</a>
+      <a href="#app"
+         class="text-brand-primary text-[13px] font-semibold uppercase tracking-widest
+                hover:text-brand-accent transition-colors duration-200">App Prenotazioni</a>
+      <a href="#contatti"
+         class="text-brand-primary text-[13px] font-semibold uppercase tracking-widest
+                hover:text-brand-accent transition-colors duration-200">Contatti</a>
+      <a href="tel:0236545329"
+         class="flex items-center gap-2 bg-brand-primary text-white text-sm font-semibold
+                px-5 py-2.5 rounded-full shadow-md
+                hover:bg-brand-primary-dk hover:shadow-lg hover:-translate-y-px
+                transition-all duration-200">
+        <i class="fa-solid fa-phone text-brand-accent text-xs"></i>
+        Chiama Ora
+      </a>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="mob-btn" class="md:hidden p-2 rounded-lg hover:bg-brand-cream-dk transition-colors"
+            aria-label="Menu principale">
+      <div class="hb-wrap flex flex-col gap-[5px]">
+        <span class="hb"></span>
+        <span class="hb"></span>
+        <span class="hb"></span>
+      </div>
+    </button>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mob-menu">
+    <div class="max-w-6xl mx-auto px-2 pt-3 pb-4 flex flex-col gap-1
+                border-t border-brand-accent/20 mt-2">
+      <a href="#specialita" data-mob-link
+         class="flex items-center gap-3 text-brand-primary font-semibold text-sm uppercase
+                tracking-wider py-3 px-4 rounded-xl hover:bg-brand-cream-dk transition-colors">
+        <i class="fa-solid fa-bread-slice text-brand-accent w-4"></i>Prodotti</a>
+      <a href="#app" data-mob-link
+         class="flex items-center gap-3 text-brand-primary font-semibold text-sm uppercase
+                tracking-wider py-3 px-4 rounded-xl hover:bg-brand-cream-dk transition-colors">
+        <i class="fa-solid fa-mobile-screen-button text-brand-accent w-4"></i>App Prenotazioni</a>
+      <a href="#contatti" data-mob-link
+         class="flex items-center gap-3 text-brand-primary font-semibold text-sm uppercase
+                tracking-wider py-3 px-4 rounded-xl hover:bg-brand-cream-dk transition-colors">
+        <i class="fa-solid fa-location-dot text-brand-accent w-4"></i>Contatti</a>
+      <a href="tel:0236545329"
+         class="flex items-center justify-center gap-2 bg-brand-primary text-white
+                font-bold py-3.5 px-6 rounded-full mt-2 hover:bg-brand-primary-dk transition-colors">
+        <i class="fa-solid fa-phone text-brand-accent"></i>
+        02&nbsp;36545329 – Chiama Ora
+      </a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     HERO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+
+  <!-- BG image -->
+  <div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?q=80&w=1600&auto=format&fit=crop"
+         alt="Pasticceria artigianale" class="w-full h-full object-cover object-center">
+    <div class="hero-overlay absolute inset-0"></div>
+  </div>
+
+  <!-- Decorative top-left grain texture -->
+  <div class="absolute inset-0 opacity-[0.03]"
+       style="background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22/></filter><rect width=%22300%22 height=%22300%22 filter=%22url(%23n)%22 opacity=%221%22/></svg>');"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 text-center text-white px-6 max-w-4xl mx-auto pt-24 pb-32">
+
+    <p class="text-brand-accent text-xs md:text-sm uppercase tracking-[.35em] font-semibold mb-7 opacity-90">
+      Cernusco sul Naviglio · Pasticceria Artigianale
+    </p>
+
+    <h1 class="font-serif text-[2.6rem] leading-tight md:text-6xl lg:text-7xl font-bold mb-7">
+      L'arte della<br>
+      <em class="text-brand-accent-lt not-italic">pasticceria</em> e del<br>
+      pane fresco
+    </h1>
+
+    <p class="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-11 leading-relaxed font-light">
+      Ogni mattina impastiamo con amore e ingredienti selezionati.<br class="hidden sm:block">
+      Vieni a scoprire i nostri dolci, il pane di giornata e la nostra caffetteria.
+    </p>
+
+    <!-- CTAs -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <a href="#specialita"
+         class="group pulse-gld flex items-center gap-3
+                bg-brand-accent hover:bg-brand-accent-dk text-brand-primary
+                font-bold px-9 py-4 rounded-full text-[15px] shadow-xl
+                transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+        <i class="fa-solid fa-star text-[13px]"></i>
+        Scopri le Delizie
+        <i class="fa-solid fa-arrow-down text-[13px] group-hover:translate-y-1 transition-transform"></i>
+      </a>
+      <a href="#app"
+         class="flex items-center gap-3 border-2 border-white/45 bg-white/10
+                hover:bg-white/20 text-white font-bold px-9 py-4 rounded-full
+                text-[15px] backdrop-blur-sm
+                transition-all duration-300 hover:-translate-y-1">
+        <i class="fa-solid fa-mobile-screen-button"></i>
+        Ordina sull'App
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll cue -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10">
+    <i class="fa-solid fa-chevron-down text-brand-accent/70 text-xl"></i>
+  </div>
+</section>
+
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     LE NOSTRE SPECIALITÀ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="specialita" class="py-20 md:py-28 px-6 bg-brand-cream">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Heading -->
+    <div class="text-center mb-16 fade-up">
+      <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3">
+        Le nostre anime
+      </p>
+      <h2 class="font-serif text-3xl md:text-5xl font-bold text-brand-primary mb-4">
+        Le Nostre Specialità
+      </h2>
+      <div class="sep mx-auto mb-5"></div>
+      <p class="text-brand-dark/65 max-w-xl mx-auto text-base leading-relaxed">
+        Tre tradizioni sotto un unico tetto: il profumo del pane caldo, la raffinatezza
+        della pasticceria e il calore di un buon caffè.
+      </p>
+    </div>
+
+    <!-- 3-col grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
+
+      <!-- PANETTERIA -->
+      <div class="spec-card text-center group fade-up">
+        <div class="w-44 h-44 md:w-52 md:h-52 mx-auto rounded-full overflow-hidden mb-6
+                    ring-4 ring-brand-accent/25 group-hover:ring-brand-accent
+                    shadow-lg transition-all duration-400">
+          <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=500&auto=format&fit=crop"
+               alt="Panetteria artigianale"
+               class="spec-img w-full h-full object-cover transition-transform duration-500">
+        </div>
+        <div class="w-11 h-11 rounded-full bg-brand-accent flex items-center justify-center
+                    mx-auto mb-4 shadow-md">
+          <i class="fa-solid fa-bread-slice text-brand-primary text-base"></i>
+        </div>
+        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3">Panetteria</h3>
+        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto">
+          Pane di campagna, baguette, focacce e filoni integrali.
+          Sfornati ogni mattina con lievito madre e farine biologiche selezionate.
+        </p>
+      </div>
+
+      <!-- PASTICCERIA -->
+      <div class="spec-card text-center group fade-up" style="transition-delay:.12s">
+        <div class="w-44 h-44 md:w-52 md:h-52 mx-auto rounded-full overflow-hidden mb-6
+                    ring-4 ring-brand-accent/25 group-hover:ring-brand-accent
+                    shadow-lg transition-all duration-400">
+          <img src="foto/pasticcini.jpg" alt="Pasticceria artigianale Il Golosone"
+               class="spec-img w-full h-full object-cover transition-transform duration-500">
+        </div>
+        <div class="w-11 h-11 rounded-full bg-brand-accent flex items-center justify-center
+                    mx-auto mb-4 shadow-md">
+          <i class="fa-solid fa-cake-candles text-brand-primary text-base"></i>
+        </div>
+        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3">Pasticceria</h3>
+        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto">
+          Torte su misura, mignon, bignè e crostatine ai frutti di stagione.
+          Ogni creazione è un'opera d'arte pensata per stupire il palato.
+        </p>
+      </div>
+
+      <!-- CAFFETTERIA -->
+      <div class="spec-card text-center group fade-up" style="transition-delay:.24s">
+        <div class="w-44 h-44 md:w-52 md:h-52 mx-auto rounded-full overflow-hidden mb-6
+                    ring-4 ring-brand-accent/25 group-hover:ring-brand-accent
+                    shadow-lg transition-all duration-400">
+          <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=500&auto=format&fit=crop"
+               alt="Caffetteria"
+               class="spec-img w-full h-full object-cover transition-transform duration-500">
+        </div>
+        <div class="w-11 h-11 rounded-full bg-brand-accent flex items-center justify-center
+                    mx-auto mb-4 shadow-md">
+          <i class="fa-solid fa-mug-hot text-brand-primary text-base"></i>
+        </div>
+        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3">Caffetteria</h3>
+        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto">
+          Espresso, cappuccino e colazioni complete.
+          Il posto perfetto per iniziare la giornata con una brioche calda e il sorriso.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     APP BANNER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="app" class="py-20 md:py-28 px-6 overflow-hidden relative"
+         style="background-color:#dcb96a;
+                background-image:
+                  radial-gradient(ellipse at 10% 90%, rgba(90,43,44,.10) 0%, transparent 55%),
+                  radial-gradient(ellipse at 85% 10%, rgba(255,255,255,.18) 0%, transparent 50%);">
+
+  <!-- Decorative circle -->
+  <div class="absolute -right-32 -top-32 w-96 h-96 rounded-full
+              bg-brand-primary opacity-[.06] pointer-events-none"></div>
+  <div class="absolute -left-20 -bottom-20 w-72 h-72 rounded-full
+              bg-white opacity-[.08] pointer-events-none"></div>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+
+      <!-- Text -->
+      <div class="flex-1 text-center lg:text-left fade-up">
+        <p class="text-brand-primary/60 text-[11px] uppercase tracking-[.38em] font-semibold mb-3">
+          Novità · Prenotazioni digitali
+        </p>
+        <h2 class="font-serif text-3xl md:text-4xl lg:text-[2.8rem] font-bold
+                   text-brand-primary mb-5 leading-tight">
+          Salta la fila,<br>
+          <em class="not-italic">prenota con la nostra App!</em>
+        </h2>
+        <div class="sep mb-6 mx-auto lg:mx-0"
+             style="background:linear-gradient(90deg,rgba(90,43,44,.45),rgba(90,43,44,.15));"></div>
+        <p class="text-brand-primary/75 text-base md:text-lg leading-relaxed mb-4
+                  max-w-lg mx-auto lg:mx-0">
+          Ordina la tua torta preferita, le brioche del mattino o il pane quotidiano
+          direttamente dal telefono — in pochi tap.
+        </p>
+        <p class="text-brand-primary/60 text-[15px] leading-relaxed mb-10
+                  max-w-lg mx-auto lg:mx-0">
+          Scegli giorno e orario di ritiro, segui i tuoi ordini in tempo reale e accumula
+          punti fedeltà ad ogni acquisto.&ensp;
+          <span class="font-bold text-brand-primary">Gratuita per tutti i clienti.</span>
+        </p>
+
+        <!-- Store badges -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
+          <a href="#" class="transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl
+                             rounded-xl overflow-hidden inline-block">
+            <img src="foto/appstore.svg" alt="Scarica su App Store" class="h-[52px] w-auto">
+          </a>
+          <a href="#" class="transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl
+                             rounded-xl overflow-hidden inline-block">
+            <img src="foto/it_badge_web_generic.png" alt="Disponibile su Google Play"
+                 class="h-[52px] w-auto">
+          </a>
+        </div>
+      </div>
+
+      <!-- iPhone mockup -->
+      <div class="flex-shrink-0 flex justify-center fade-up" style="transition-delay:.15s">
+        <div class="relative">
+          <div class="absolute -inset-10 rounded-full bg-brand-primary/10 blur-3xl"></div>
+          <img src="foto/iphone.png" alt="App Il Golosone"
+               class="relative w-52 md:w-60 lg:w-72 h-auto drop-shadow-2xl
+                      hover:scale-[1.04] transition-transform duration-500">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     GALLERIA GOLOSA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="galleria" class="bg-brand-cream-dk">
+
+  <!-- Heading -->
+  <div class="text-center pt-16 pb-10 px-6 fade-up">
+    <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3">
+      I nostri capolavori
+    </p>
+    <h2 class="font-serif text-3xl md:text-4xl font-bold text-brand-primary mb-4">
+      Galleria Golosa
+    </h2>
+    <div class="sep mx-auto"></div>
+  </div>
+
+  <!-- 2×2 grid – no gaps -->
+  <div class="grid grid-cols-2">
+
+    <div class="gal-cell overflow-hidden aspect-square">
+      <img src="foto/bigne.jpg" alt="Bignè al pistacchio"
+           class="w-full h-full object-cover transition-transform duration-500">
+    </div>
+
+    <div class="gal-cell overflow-hidden aspect-square">
+      <img src="foto/pasticcini.jpg" alt="Pasticcini mignon"
+           class="w-full h-full object-cover transition-transform duration-500">
+    </div>
+
+    <div class="gal-cell overflow-hidden aspect-square">
+      <img src="foto/crostatina.jpg" alt="Crostatina ai lamponi"
+           class="w-full h-full object-cover transition-transform duration-500">
+    </div>
+
+    <div class="gal-cell overflow-hidden aspect-square">
+      <img src="foto/biscotti.jpg" alt="Biscotti artigianali"
+           class="w-full h-full object-cover transition-transform duration-500">
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     CONTATTI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="contatti" class="py-20 md:py-28 px-6 bg-brand-cream">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Heading -->
+    <div class="text-center mb-16 fade-up">
+      <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3">
+        Vieni a trovarci
+      </p>
+      <h2 class="font-serif text-3xl md:text-5xl font-bold text-brand-primary mb-4">
+        Dove Siamo
+      </h2>
+      <div class="sep mx-auto"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+
+      <!-- Left column: info cards -->
+      <div class="space-y-6 fade-up">
+
+        <!-- Orari -->
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-brand-accent/15">
+          <div class="flex items-center gap-3 mb-7">
+            <div class="w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-clock text-brand-primary"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-brand-primary">Orari di Apertura</h3>
+          </div>
+
+          <div class="space-y-2.5">
+            <!-- Lun–Ven -->
+            <div class="flex justify-between items-center py-2.5
+                        border-b border-brand-cream-dk">
+              <span class="font-medium text-brand-dark/80">Lunedì – Venerdì</span>
+              <span class="font-bold text-brand-primary tabular-nums">07:00 – 19:30</span>
+            </div>
+            <!-- Sab -->
+            <div class="flex justify-between items-center py-2.5
+                        border-b border-brand-cream-dk">
+              <span class="font-medium text-brand-dark/80">Sabato</span>
+              <span class="font-bold text-brand-primary tabular-nums">07:00 – 19:00</span>
+            </div>
+            <!-- Dom – highlighted -->
+            <div class="flex justify-between items-center py-3 px-4 mt-1
+                        bg-brand-accent/18 rounded-xl border border-brand-accent/30">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-brand-primary">Domenica</span>
+                <span class="text-[11px] bg-brand-accent text-brand-primary
+                             px-2.5 py-0.5 rounded-full font-bold tracking-wide">
+                  Solo mattina
+                </span>
+              </div>
+              <span class="font-bold text-brand-primary tabular-nums">08:00 – 12:30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indirizzo -->
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-brand-accent/15">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center
+                        flex-shrink-0 mt-0.5">
+              <i class="fa-solid fa-location-dot text-brand-primary"></i>
+            </div>
+            <div>
+              <h3 class="font-serif text-xl font-bold text-brand-primary mb-2">Indirizzo</h3>
+              <address class="not-italic text-brand-dark/70 text-[15px] leading-relaxed">
+                Via IV Novembre, 23<br>
+                20063 Cernusco sul Naviglio (MI)
+              </address>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA Telefono -->
+        <a href="tel:0236545329"
+           class="group flex items-center gap-5 w-full bg-brand-primary
+                  hover:bg-brand-primary-dk text-white py-5 px-7 rounded-2xl
+                  font-bold text-lg shadow-lg
+                  transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+          <div class="w-12 h-12 rounded-full bg-brand-accent flex items-center justify-center
+                      flex-shrink-0 shadow-md group-hover:scale-110 transition-transform duration-300">
+            <i class="fa-solid fa-phone-volume text-brand-primary text-lg"></i>
+          </div>
+          <div>
+            <div class="text-brand-accent/75 text-[11px] tracking-[.3em] uppercase mb-0.5">
+              Chiamaci adesso
+            </div>
+            <div class="text-[1.25rem] font-bold tracking-wide">02&nbsp;36545329</div>
+          </div>
+          <i class="fa-solid fa-arrow-right ml-auto text-brand-accent/60
+                    group-hover:translate-x-1.5 transition-transform duration-200"></i>
+        </a>
+
+      </div>
+
+      <!-- Right column: map -->
+      <div class="map-wrap h-[420px] lg:h-full min-h-[380px] fade-up"
+           style="transition-delay:.15s">
+        <iframe
+          src="https://maps.google.com/maps?q=Via+IV+Novembre+23%2C+20063+Cernusco+sul+Naviglio+MI%2C+Italy&t=&z=16&ie=UTF8&iwloc=&output=embed"
+          width="100%" height="100%"
+          style="border:0; min-height:380px;"
+          allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Il Golosone – Via IV Novembre 23, Cernusco sul Naviglio">
+        </iframe>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     FOOTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<footer class="bg-brand-primary text-white py-10 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-7">
+
+      <!-- Logo + descriptor -->
+      <a href="#hero" class="flex items-center gap-4 group">
+        <div class="w-14 h-14 rounded-full bg-brand-cream/10 flex items-center justify-center flex-shrink-0
+                    group-hover:bg-brand-cream/20 transition-colors">
+          <img src="foto/logo.png" alt="Il Golosone"
+               class="h-10 w-auto brightness-0 invert opacity-85">
+        </div>
+        <div>
+          <div class="font-serif text-xl font-bold text-brand-accent leading-tight">Il Golosone</div>
+          <div class="text-white/45 text-xs mt-0.5">Panetteria &amp; Pasticceria Artigianale</div>
+        </div>
+      </a>
+
+      <!-- Nav links -->
+      <nav class="flex gap-7 text-sm">
+        <a href="#specialita" class="text-white/55 hover:text-brand-accent transition-colors">Prodotti</a>
+        <a href="#app"        class="text-white/55 hover:text-brand-accent transition-colors">App</a>
+        <a href="#contatti"   class="text-white/55 hover:text-brand-accent transition-colors">Contatti</a>
+      </nav>
+
+      <!-- Copyright + address -->
+      <div class="text-white/35 text-xs text-center md:text-right leading-relaxed">
+        © 2025 Il Golosone<br>
+        Via IV Novembre 23 · Cernusco sul Naviglio
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     JAVASCRIPT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<script>
+  /* ── Mobile menu ── */
+  const mobBtn  = document.getElementById('mob-btn');
+  const mobMenu = document.getElementById('mob-menu');
+  const hbWrap  = mobBtn.querySelector('.hb-wrap');
+  let   open    = false;
+
+  mobBtn.addEventListener('click', () => {
+    open = !open;
+    mobMenu.classList.toggle('open', open);
+    hbWrap.classList.toggle('open', open);
+  });
+
+  document.querySelectorAll('[data-mob-link]').forEach(el => {
+    el.addEventListener('click', () => {
+      open = false;
+      mobMenu.classList.remove('open');
+      hbWrap.classList.remove('open');
+    });
+  });
+
+  /* ── Navbar shadow on scroll ── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 48);
+  }, { passive: true });
+
+  /* ── Scroll fade-in via IntersectionObserver ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
