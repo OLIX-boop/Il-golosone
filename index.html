@@ -6,6 +6,9 @@
   <meta name="description" content="Il Golosone – Panetteria e Pasticceria Artigianale a Cernusco sul Naviglio. Pane fresco, dolci artigianali e caffetteria. Prenota sull'app!">
   <title>Il Golosone – Panetteria &amp; Pasticceria Artigianale · Cernusco sul Naviglio</title>
 
+  <!-- Favicon -->
+  <link rel="icon" href="foto/logo.png" type="image/png">
+
   <!-- Tailwind config must come BEFORE the CDN script -->
   <script>
     tailwind = {
@@ -88,7 +91,7 @@
       max-height: 0; opacity: 0; overflow: hidden;
       transition: max-height .38s ease, opacity .3s ease;
     }
-    #mob-menu.open { max-height: 420px; opacity: 1; }
+    #mob-menu.open { max-height: 480px; opacity: 1; }
 
     /* ── Hamburger → X ── */
     .hb { display: block; width: 22px; height: 2px; border-radius: 2px;
@@ -112,6 +115,52 @@
     /* ── Map ── */
     .map-wrap { border-radius: 1.25rem; overflow: hidden;
       box-shadow: 0 8px 36px rgba(90,43,44,0.14); }
+
+    /* ── Nav links: white when transparent, dark when scrolled ── */
+    .nav-link {
+      color: rgba(255,255,255,0.92) !important;
+      transition: color .2s;
+    }
+    .nav-link:hover { color: #dcb96a !important; }
+    #navbar.scrolled .nav-link { color: #5a2b2c !important; }
+    #navbar.scrolled .nav-link:hover { color: #b8962f !important; }
+
+    /* ── Lang toggle ── */
+    .lang-btn {
+      border: 1px solid rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.92);
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .lang-btn:hover {
+      border-color: #dcb96a;
+      color: #dcb96a;
+    }
+    #navbar.scrolled .lang-btn {
+      border-color: rgba(90,43,44,0.3);
+      color: #5a2b2c;
+    }
+    #navbar.scrolled .lang-btn:hover {
+      border-color: #dcb96a;
+      color: #b8962f;
+    }
+
+    /* ── CTA "Chiama Ora": ghost su trasparente, solido su bianco ── */
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1.5px solid rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.12);
+      color: white;
+      font-size: 0.875rem; font-weight: 600;
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      transition: background .2s, border-color .2s, color .2s, box-shadow .2s, transform .15s;
+    }
+    .cta-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+    #navbar.scrolled .cta-btn {
+      background: #5a2b2c; border-color: #5a2b2c; color: white;
+      box-shadow: 0 2px 14px rgba(90,43,44,0.3);
+    }
+    #navbar.scrolled .cta-btn:hover { background: #3d1a1b; }
   </style>
 </head>
 
@@ -122,44 +171,49 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <nav id="navbar" class="fixed inset-x-0 top-0 z-50 py-3 px-5 md:px-10
      bg-brand-cream/90 backdrop-blur-md">
-  <div class="max-w-6xl mx-auto flex items-center justify-between">
+  <div class="max-w-6xl mx-auto flex items-center">
 
-    <!-- Logo -->
-    <a href="#hero" class="group flex-shrink-0">
-      <img src="foto/logo.png" alt="Il Golosone"
-           class="h-[52px] w-auto transition-transform duration-300 group-hover:scale-105 drop-shadow-sm">
-    </a>
-
-    <!-- Desktop links -->
-    <div class="hidden md:flex items-center gap-8">
-      <a href="#specialita"
-         class="text-brand-primary text-[13px] font-semibold uppercase tracking-widest
-                hover:text-brand-accent transition-colors duration-200">Prodotti</a>
-      <a href="#app"
-         class="text-brand-primary text-[13px] font-semibold uppercase tracking-widest
-                hover:text-brand-accent transition-colors duration-200">App Prenotazioni</a>
-      <a href="#contatti"
-         class="text-brand-primary text-[13px] font-semibold uppercase tracking-widest
-                hover:text-brand-accent transition-colors duration-200">Contatti</a>
-      <a href="tel:0236545329"
-         class="flex items-center gap-2 bg-brand-primary text-white text-sm font-semibold
-                px-5 py-2.5 rounded-full shadow-md
-                hover:bg-brand-primary-dk hover:shadow-lg hover:-translate-y-px
-                transition-all duration-200">
-        <i class="fa-solid fa-phone text-brand-accent text-xs"></i>
-        Chiama Ora
+    <!-- Logo – sinistra -->
+    <div class="flex-1 flex justify-start">
+      <a href="#hero" class="group flex-shrink-0">
+        <img src="foto/logo.png" alt="Il Golosone"
+             class="h-[52px] w-auto transition-transform duration-300 group-hover:scale-105 drop-shadow-sm">
       </a>
     </div>
 
-    <!-- Hamburger -->
-    <button id="mob-btn" class="md:hidden p-2 rounded-lg hover:bg-brand-cream-dk transition-colors"
-            aria-label="Menu principale">
-      <div class="hb-wrap flex flex-col gap-[5px]">
-        <span class="hb"></span>
-        <span class="hb"></span>
-        <span class="hb"></span>
-      </div>
-    </button>
+    <!-- Link centrali (desktop) -->
+    <div class="hidden md:flex items-center gap-6">
+      <a href="#specialita"
+         class="nav-link text-[13px] font-semibold uppercase tracking-widest"
+         data-i18n="nav.prodotti">Prodotti</a>
+      <a href="#app"
+         class="nav-link text-[13px] font-semibold uppercase tracking-widest"
+         data-i18n="nav.app">App Prenotazioni</a>
+      <a href="#contatti"
+         class="nav-link text-[13px] font-semibold uppercase tracking-widest"
+         data-i18n="nav.contatti">Contatti</a>
+      <button id="lang-toggle" onclick="toggleLang()"
+        class="lang-btn text-[12px] font-bold px-3 py-1.5 rounded-full"
+        aria-label="Switch language">EN</button>
+    </div>
+
+    <!-- Destra: CTA + hamburger -->
+    <div class="flex-1 flex justify-end items-center gap-3">
+      <a href="tel:0236545329"
+         class="cta-btn hidden md:inline-flex">
+        <i class="fa-solid fa-phone text-xs opacity-80"></i>
+        <span data-i18n="nav.chiama">Chiama Ora</span>
+      </a>
+      <button id="mob-btn" class="md:hidden p-2 rounded-lg hover:bg-brand-cream-dk transition-colors"
+              aria-label="Menu principale">
+        <div class="hb-wrap flex flex-col gap-[5px]">
+          <span class="hb"></span>
+          <span class="hb"></span>
+          <span class="hb"></span>
+        </div>
+      </button>
+    </div>
+
   </div>
 
   <!-- Mobile dropdown -->
@@ -169,20 +223,27 @@
       <a href="#specialita" data-mob-link
          class="flex items-center gap-3 text-brand-primary font-semibold text-sm uppercase
                 tracking-wider py-3 px-4 rounded-xl hover:bg-brand-cream-dk transition-colors">
-        <i class="fa-solid fa-bread-slice text-brand-accent w-4"></i>Prodotti</a>
+        <i class="fa-solid fa-bread-slice text-brand-accent w-4"></i>
+        <span data-i18n="nav.prodotti">Prodotti</span></a>
       <a href="#app" data-mob-link
          class="flex items-center gap-3 text-brand-primary font-semibold text-sm uppercase
                 tracking-wider py-3 px-4 rounded-xl hover:bg-brand-cream-dk transition-colors">
-        <i class="fa-solid fa-mobile-screen-button text-brand-accent w-4"></i>App Prenotazioni</a>
+        <i class="fa-solid fa-mobile-screen-button text-brand-accent w-4"></i>
+        <span data-i18n="nav.app">App Prenotazioni</span></a>
       <a href="#contatti" data-mob-link
          class="flex items-center gap-3 text-brand-primary font-semibold text-sm uppercase
                 tracking-wider py-3 px-4 rounded-xl hover:bg-brand-cream-dk transition-colors">
-        <i class="fa-solid fa-location-dot text-brand-accent w-4"></i>Contatti</a>
+        <i class="fa-solid fa-location-dot text-brand-accent w-4"></i>
+        <span data-i18n="nav.contatti">Contatti</span></a>
+      <!-- Mobile lang toggle -->
+      <button onclick="toggleLang()"
+        id="lang-toggle-mobile"
+        class="lang-btn self-start ml-4 text-sm font-bold px-4 py-2 rounded-full mt-1">EN</button>
       <a href="tel:0236545329"
          class="flex items-center justify-center gap-2 bg-brand-primary text-white
                 font-bold py-3.5 px-6 rounded-full mt-2 hover:bg-brand-primary-dk transition-colors">
         <i class="fa-solid fa-phone text-brand-accent"></i>
-        02&nbsp;36545329 – Chiama Ora
+        02&nbsp;36545329 – <span data-i18n="nav.chiama">Chiama Ora</span>
       </a>
     </div>
   </div>
@@ -196,29 +257,32 @@
 
   <!-- BG image -->
   <div class="absolute inset-0">
-    <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?q=80&w=1600&auto=format&fit=crop"
-         alt="Pasticceria artigianale" class="w-full h-full object-cover object-center">
+    <img src="foto/IMG_4325.jpg"
+         alt="Torte moderne Il Golosone" class="w-full h-full object-cover object-center">
     <div class="hero-overlay absolute inset-0"></div>
   </div>
 
-  <!-- Decorative top-left grain texture -->
+  <!-- Decorative grain texture -->
   <div class="absolute inset-0 opacity-[0.03]"
        style="background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22/></filter><rect width=%22300%22 height=%22300%22 filter=%22url(%23n)%22 opacity=%221%22/></svg>');"></div>
 
   <!-- Content -->
   <div class="relative z-10 text-center text-white px-6 max-w-4xl mx-auto pt-24 pb-32">
 
-    <p class="text-brand-accent text-xs md:text-sm uppercase tracking-[.35em] font-semibold mb-7 opacity-90">
+    <p class="text-brand-accent text-xs md:text-sm uppercase tracking-[.35em] font-semibold mb-7 opacity-90"
+       data-i18n="hero.badge">
       Cernusco sul Naviglio · Pasticceria Artigianale
     </p>
 
-    <h1 class="font-serif text-[2.6rem] leading-tight md:text-6xl lg:text-7xl font-bold mb-7">
+    <h1 class="font-serif text-[2.6rem] leading-tight md:text-6xl lg:text-7xl font-bold mb-7"
+        data-i18n-html="hero.title">
       L'arte della<br>
       <em class="text-brand-accent-lt not-italic">pasticceria</em> e del<br>
       pane fresco
     </h1>
 
-    <p class="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-11 leading-relaxed font-light">
+    <p class="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-11 leading-relaxed font-light"
+       data-i18n-html="hero.desc">
       Ogni mattina impastiamo con amore e ingredienti selezionati.<br class="hidden sm:block">
       Vieni a scoprire i nostri dolci, il pane di giornata e la nostra caffetteria.
     </p>
@@ -231,7 +295,7 @@
                 font-bold px-9 py-4 rounded-full text-[15px] shadow-xl
                 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
         <i class="fa-solid fa-star text-[13px]"></i>
-        Scopri le Delizie
+        <span data-i18n="hero.cta1">Scopri le Delizie</span>
         <i class="fa-solid fa-arrow-down text-[13px] group-hover:translate-y-1 transition-transform"></i>
       </a>
       <a href="#app"
@@ -240,7 +304,7 @@
                 text-[15px] backdrop-blur-sm
                 transition-all duration-300 hover:-translate-y-1">
         <i class="fa-solid fa-mobile-screen-button"></i>
-        Ordina sull'App
+        <span data-i18n="hero.cta2">Ordina sull'App</span>
       </a>
     </div>
   </div>
@@ -260,14 +324,17 @@
 
     <!-- Heading -->
     <div class="text-center mb-16 fade-up">
-      <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3">
+      <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3"
+         data-i18n="spec.label">
         Le nostre anime
       </p>
-      <h2 class="font-serif text-3xl md:text-5xl font-bold text-brand-primary mb-4">
+      <h2 class="font-serif text-3xl md:text-5xl font-bold text-brand-primary mb-4"
+          data-i18n="spec.title">
         Le Nostre Specialità
       </h2>
       <div class="sep mx-auto mb-5"></div>
-      <p class="text-brand-dark/65 max-w-xl mx-auto text-base leading-relaxed">
+      <p class="text-brand-dark/65 max-w-xl mx-auto text-base leading-relaxed"
+         data-i18n="spec.desc">
         Tre tradizioni sotto un unico tetto: il profumo del pane caldo, la raffinatezza
         della pasticceria e il calore di un buon caffè.
       </p>
@@ -289,8 +356,10 @@
                     mx-auto mb-4 shadow-md">
           <i class="fa-solid fa-bread-slice text-brand-primary text-base"></i>
         </div>
-        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3">Panetteria</h3>
-        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto">
+        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3"
+            data-i18n="pan.title">Panetteria</h3>
+        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto"
+           data-i18n="pan.desc">
           Pane di campagna, baguette, focacce e filoni integrali.
           Sfornati ogni mattina con lievito madre e farine biologiche selezionate.
         </p>
@@ -308,8 +377,10 @@
                     mx-auto mb-4 shadow-md">
           <i class="fa-solid fa-cake-candles text-brand-primary text-base"></i>
         </div>
-        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3">Pasticceria</h3>
-        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto">
+        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3"
+            data-i18n="past.title">Pasticceria</h3>
+        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto"
+           data-i18n="past.desc">
           Torte su misura, mignon, bignè e crostatine ai frutti di stagione.
           Ogni creazione è un'opera d'arte pensata per stupire il palato.
         </p>
@@ -328,8 +399,10 @@
                     mx-auto mb-4 shadow-md">
           <i class="fa-solid fa-mug-hot text-brand-primary text-base"></i>
         </div>
-        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3">Caffetteria</h3>
-        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto">
+        <h3 class="font-serif text-2xl font-bold text-brand-primary mb-3"
+            data-i18n="caff.title">Caffetteria</h3>
+        <p class="text-brand-dark/60 text-sm md:text-[15px] leading-relaxed max-w-xs mx-auto"
+           data-i18n="caff.desc">
           Espresso, cappuccino e colazioni complete.
           Il posto perfetto per iniziare la giornata con una brioche calda e il sorriso.
         </p>
@@ -349,7 +422,7 @@
                   radial-gradient(ellipse at 10% 90%, rgba(90,43,44,.10) 0%, transparent 55%),
                   radial-gradient(ellipse at 85% 10%, rgba(255,255,255,.18) 0%, transparent 50%);">
 
-  <!-- Decorative circle -->
+  <!-- Decorative circles -->
   <div class="absolute -right-32 -top-32 w-96 h-96 rounded-full
               bg-brand-primary opacity-[.06] pointer-events-none"></div>
   <div class="absolute -left-20 -bottom-20 w-72 h-72 rounded-full
@@ -360,23 +433,27 @@
 
       <!-- Text -->
       <div class="flex-1 text-center lg:text-left fade-up">
-        <p class="text-brand-primary/60 text-[11px] uppercase tracking-[.38em] font-semibold mb-3">
+        <p class="text-brand-primary/60 text-[11px] uppercase tracking-[.38em] font-semibold mb-3"
+           data-i18n="app.label">
           Novità · Prenotazioni digitali
         </p>
         <h2 class="font-serif text-3xl md:text-4xl lg:text-[2.8rem] font-bold
-                   text-brand-primary mb-5 leading-tight">
+                   text-brand-primary mb-5 leading-tight"
+            data-i18n-html="app.title">
           Salta la fila,<br>
           <em class="not-italic">prenota con la nostra App!</em>
         </h2>
         <div class="sep mb-6 mx-auto lg:mx-0"
              style="background:linear-gradient(90deg,rgba(90,43,44,.45),rgba(90,43,44,.15));"></div>
         <p class="text-brand-primary/75 text-base md:text-lg leading-relaxed mb-4
-                  max-w-lg mx-auto lg:mx-0">
+                  max-w-lg mx-auto lg:mx-0"
+           data-i18n="app.desc1">
           Ordina la tua torta preferita, le brioche del mattino o il pane quotidiano
           direttamente dal telefono — in pochi tap.
         </p>
         <p class="text-brand-primary/60 text-[15px] leading-relaxed mb-10
-                  max-w-lg mx-auto lg:mx-0">
+                  max-w-lg mx-auto lg:mx-0"
+           data-i18n-html="app.desc2">
           Scegli giorno e orario di ritiro, segui i tuoi ordini in tempo reale e accumula
           punti fedeltà ad ogni acquisto.&ensp;
           <span class="font-bold text-brand-primary">Gratuita per tutti i clienti.</span>
@@ -418,10 +495,12 @@
 
   <!-- Heading -->
   <div class="text-center pt-16 pb-10 px-6 fade-up">
-    <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3">
+    <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3"
+       data-i18n="gal.label">
       I nostri capolavori
     </p>
-    <h2 class="font-serif text-3xl md:text-4xl font-bold text-brand-primary mb-4">
+    <h2 class="font-serif text-3xl md:text-4xl font-bold text-brand-primary mb-4"
+        data-i18n="gal.title">
       Galleria Golosa
     </h2>
     <div class="sep mx-auto"></div>
@@ -462,10 +541,12 @@
 
     <!-- Heading -->
     <div class="text-center mb-16 fade-up">
-      <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3">
+      <p class="text-brand-accent text-[11px] uppercase tracking-[.38em] font-semibold mb-3"
+         data-i18n="cont.label">
         Vieni a trovarci
       </p>
-      <h2 class="font-serif text-3xl md:text-5xl font-bold text-brand-primary mb-4">
+      <h2 class="font-serif text-3xl md:text-5xl font-bold text-brand-primary mb-4"
+          data-i18n="cont.title">
         Dove Siamo
       </h2>
       <div class="sep mx-auto"></div>
@@ -482,34 +563,49 @@
             <div class="w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center flex-shrink-0">
               <i class="fa-solid fa-clock text-brand-primary"></i>
             </div>
-            <h3 class="font-serif text-xl font-bold text-brand-primary">Orari di Apertura</h3>
+            <h3 class="font-serif text-xl font-bold text-brand-primary"
+                data-i18n="orari.title">Orari di Apertura</h3>
           </div>
 
           <div class="space-y-2.5">
             <!-- Lun–Ven -->
-            <div class="flex justify-between items-center py-2.5
+            <div class="flex justify-between items-center py-2.5 px-4
                         border-b border-brand-cream-dk">
-              <span class="font-medium text-brand-dark/80">Lunedì – Venerdì</span>
+              <span class="font-medium text-brand-dark/80"
+                    data-i18n="orari.lun">Lunedì – Venerdì</span>
               <span class="font-bold text-brand-primary tabular-nums">07:00 – 19:30</span>
             </div>
             <!-- Sab -->
-            <div class="flex justify-between items-center py-2.5
+            <div class="flex justify-between items-center py-2.5 px-4
                         border-b border-brand-cream-dk">
-              <span class="font-medium text-brand-dark/80">Sabato</span>
+              <span class="font-medium text-brand-dark/80"
+                    data-i18n="orari.sab">Sabato</span>
               <span class="font-bold text-brand-primary tabular-nums">07:00 – 19:00</span>
             </div>
             <!-- Dom – highlighted -->
             <div class="flex justify-between items-center py-3 px-4 mt-1
                         bg-brand-accent/18 rounded-xl border border-brand-accent/30">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-bold text-brand-primary">Domenica</span>
+                <span class="font-bold text-brand-primary"
+                      data-i18n="orari.dom">Domenica</span>
                 <span class="text-[11px] bg-brand-accent text-brand-primary
-                             px-2.5 py-0.5 rounded-full font-bold tracking-wide">
+                             px-2.5 py-0.5 rounded-full font-bold tracking-wide"
+                      data-i18n="orari.dom.badge">
                   Solo mattina
                 </span>
               </div>
               <span class="font-bold text-brand-primary tabular-nums">08:00 – 12:30</span>
             </div>
+          </div>
+
+          <!-- Numero di telefono -->
+          <div class="mt-5 pt-5 border-t border-brand-cream-dk flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-brand-accent/20 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-phone text-brand-primary text-xs"></i>
+            </div>
+            <a href="tel:0236545329" class="font-bold text-brand-primary text-base hover:text-brand-accent transition-colors">
+              02&nbsp;36545329
+            </a>
           </div>
         </div>
 
@@ -521,7 +617,8 @@
               <i class="fa-solid fa-location-dot text-brand-primary"></i>
             </div>
             <div>
-              <h3 class="font-serif text-xl font-bold text-brand-primary mb-2">Indirizzo</h3>
+              <h3 class="font-serif text-xl font-bold text-brand-primary mb-2"
+                  data-i18n="addr.title">Indirizzo</h3>
               <address class="not-italic text-brand-dark/70 text-[15px] leading-relaxed">
                 Via IV Novembre, 23<br>
                 20063 Cernusco sul Naviglio (MI)
@@ -541,7 +638,8 @@
             <i class="fa-solid fa-phone-volume text-brand-primary text-lg"></i>
           </div>
           <div>
-            <div class="text-brand-accent/75 text-[11px] tracking-[.3em] uppercase mb-0.5">
+            <div class="text-brand-accent/75 text-[11px] tracking-[.3em] uppercase mb-0.5"
+                 data-i18n="cont.chiama">
               Chiamaci adesso
             </div>
             <div class="text-[1.25rem] font-bold tracking-wide">02&nbsp;36545329</div>
@@ -586,21 +684,25 @@
         </div>
         <div>
           <div class="font-serif text-xl font-bold text-brand-accent leading-tight">Il Golosone</div>
-          <div class="text-white/45 text-xs mt-0.5">Panetteria &amp; Pasticceria Artigianale</div>
+          <div class="text-white/45 text-xs mt-0.5"
+               data-i18n="cont.footer.desc">Panetteria &amp; Pasticceria Artigianale</div>
         </div>
       </a>
 
       <!-- Nav links -->
       <nav class="flex gap-7 text-sm">
-        <a href="#specialita" class="text-white/55 hover:text-brand-accent transition-colors">Prodotti</a>
-        <a href="#app"        class="text-white/55 hover:text-brand-accent transition-colors">App</a>
-        <a href="#contatti"   class="text-white/55 hover:text-brand-accent transition-colors">Contatti</a>
+        <a href="#specialita" class="text-white/55 hover:text-brand-accent transition-colors"
+           data-i18n="footer.nav.prodotti">Prodotti</a>
+        <a href="#app"        class="text-white/55 hover:text-brand-accent transition-colors"
+           data-i18n="footer.nav.app">App</a>
+        <a href="#contatti"   class="text-white/55 hover:text-brand-accent transition-colors"
+           data-i18n="footer.nav.contatti">Contatti</a>
       </nav>
 
       <!-- Copyright + address -->
       <div class="text-white/35 text-xs text-center md:text-right leading-relaxed">
-        © 2025 Il Golosone<br>
-        Via IV Novembre 23 · Cernusco sul Naviglio
+        <span data-i18n="footer.copy">© 2025 Il Golosone</span><br>
+        <span data-i18n="footer.address">Via IV Novembre 23 · Cernusco sul Naviglio</span>
       </div>
 
     </div>
@@ -649,6 +751,122 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
 
   document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  /* ══════════════════════════════════════
+     LANGUAGE SYSTEM
+  ══════════════════════════════════════ */
+  const translations = {
+    it: {
+      'nav.prodotti':       'Prodotti',
+      'nav.app':            'App Prenotazioni',
+      'nav.contatti':       'Contatti',
+      'nav.chiama':         'Chiama Ora',
+      'hero.badge':         'Cernusco sul Naviglio · Pasticceria Artigianale',
+      'hero.title':         "L'arte della<br><em class=\"text-brand-accent-lt not-italic\">pasticceria</em> e del<br>pane fresco",
+      'hero.desc':          'Ogni mattina impastiamo con amore e ingredienti selezionati.<br class="hidden sm:block">Vieni a scoprire i nostri dolci, il pane di giornata e la nostra caffetteria.',
+      'hero.cta1':          'Scopri le Delizie',
+      'hero.cta2':          "Ordina sull'App",
+      'spec.label':         'Le nostre anime',
+      'spec.title':         'Le Nostre Specialità',
+      'spec.desc':          'Tre tradizioni sotto un unico tetto: il profumo del pane caldo, la raffinatezza della pasticceria e il calore di un buon caffè.',
+      'pan.title':          'Panetteria',
+      'pan.desc':           'Pane di campagna, baguette, focacce e filoni integrali. Sfornati ogni mattina con lievito madre e farine biologiche selezionate.',
+      'past.title':         'Pasticceria',
+      'past.desc':          "Torte su misura, mignon, bignè e crostatine ai frutti di stagione. Ogni creazione è un'opera d'arte pensata per stupire il palato.",
+      'caff.title':         'Caffetteria',
+      'caff.desc':          'Espresso, cappuccino e colazioni complete. Il posto perfetto per iniziare la giornata con una brioche calda e il sorriso.',
+      'app.label':          'Novità · Prenotazioni digitali',
+      'app.title':          "Salta la fila,<br><em class=\"not-italic\">prenota con la nostra App!</em>",
+      'app.desc1':          'Ordina la tua torta preferita, le brioche del mattino o il pane quotidiano direttamente dal telefono — in pochi tap.',
+      'app.desc2':          'Scegli giorno e orario di ritiro, segui i tuoi ordini in tempo reale e accumula punti fedeltà ad ogni acquisto.&ensp;<span class="font-bold text-brand-primary">Gratuita per tutti i clienti.</span>',
+      'gal.label':          'I nostri capolavori',
+      'gal.title':          'Galleria Golosa',
+      'cont.label':         'Vieni a trovarci',
+      'cont.title':         'Dove Siamo',
+      'orari.title':        'Orari di Apertura',
+      'orari.lun':          'Lunedì – Venerdì',
+      'orari.sab':          'Sabato',
+      'orari.dom':          'Domenica',
+      'orari.dom.badge':    'Solo mattina',
+      'addr.title':         'Indirizzo',
+      'cont.chiama':        'Chiamaci adesso',
+      'cont.footer.desc':   'Panetteria & Pasticceria Artigianale',
+      'footer.nav.prodotti':'Prodotti',
+      'footer.nav.app':     'App',
+      'footer.nav.contatti':'Contatti',
+      'footer.copy':        '© 2025 Il Golosone',
+      'footer.address':     'Via IV Novembre 23 · Cernusco sul Naviglio',
+    },
+    en: {
+      'nav.prodotti':       'Products',
+      'nav.app':            'Booking App',
+      'nav.contatti':       'Contacts',
+      'nav.chiama':         'Call Now',
+      'hero.badge':         'Cernusco sul Naviglio · Artisan Pastry Shop',
+      'hero.title':         "The art of<br><em class=\"text-brand-accent-lt not-italic\">pastry</em> and<br>fresh bread",
+      'hero.desc':          'Every morning we knead with love and selected ingredients.<br class="hidden sm:block">Come discover our sweets, the bread of the day and our café.',
+      'hero.cta1':          'Discover the Delights',
+      'hero.cta2':          'Order on the App',
+      'spec.label':         'Our souls',
+      'spec.title':         'Our Specialties',
+      'spec.desc':          'Three traditions under one roof: the scent of warm bread, the refinement of pastry and the warmth of a good coffee.',
+      'pan.title':          'Bakery',
+      'pan.desc':           'Country bread, baguettes, focaccia and wholegrain loaves. Baked every morning with sourdough and selected organic flours.',
+      'past.title':         'Pastry',
+      'past.desc':          'Custom cakes, petit fours, éclairs and seasonal fruit tartlets. Every creation is a work of art designed to delight the palate.',
+      'caff.title':         'Café',
+      'caff.desc':          'Espresso, cappuccino and full breakfasts. The perfect place to start the day with a warm croissant and a smile.',
+      'app.label':          'New · Digital bookings',
+      'app.title':          "Skip the queue,<br><em class=\"not-italic\">book with our App!</em>",
+      'app.desc1':          'Order your favourite cake, morning croissants or daily bread directly from your phone — in just a few taps.',
+      'app.desc2':          'Choose your pickup day and time, follow your orders in real time and collect loyalty points with every purchase.&ensp;<span class="font-bold text-brand-primary">Free for all customers.</span>',
+      'gal.label':          'Our masterpieces',
+      'gal.title':          'Sweet Gallery',
+      'cont.label':         'Come visit us',
+      'cont.title':         'Where We Are',
+      'orari.title':        'Opening Hours',
+      'orari.lun':          'Monday – Friday',
+      'orari.sab':          'Saturday',
+      'orari.dom':          'Sunday',
+      'orari.dom.badge':    'Morning only',
+      'addr.title':         'Address',
+      'cont.chiama':        'Call us now',
+      'cont.footer.desc':   'Bakery & Artisan Pastry',
+      'footer.nav.prodotti':'Products',
+      'footer.nav.app':     'App',
+      'footer.nav.contatti':'Contacts',
+      'footer.copy':        '© 2025 Il Golosone',
+      'footer.address':     'Via IV Novembre 23 · Cernusco sul Naviglio',
+    }
+  };
+
+  let currentLang = 'it';
+
+  function applyLang(lang) {
+    const t = translations[lang];
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) el.textContent = t[key];
+    });
+
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      if (t[key] !== undefined) el.innerHTML = t[key];
+    });
+
+    document.documentElement.lang = lang;
+
+    const nextLabel = lang === 'it' ? 'EN' : 'IT';
+    document.querySelectorAll('#lang-toggle, #lang-toggle-mobile').forEach(btn => {
+      btn.textContent = nextLabel;
+    });
+  }
+
+  function toggleLang() {
+    currentLang = currentLang === 'it' ? 'en' : 'it';
+    applyLang(currentLang);
+  }
 </script>
 
 </body>
